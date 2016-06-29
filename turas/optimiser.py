@@ -18,15 +18,15 @@ class locationOptimiser(origins_list, api_key):
             self.gmaps = googlemaps.Client(key=api_key)
         except ValueError:
             print("API key provided is invalid")
-            sys.exit()
+            sys.exit(1)
 
         if type(origins_list) is not list:
             print("List of origins must be provided")
-            sys.exit()
+            sys.exit(1)
 
         if not all([type(x) == str for x in origins_list])
             print("Origins must be provided as strings in list")
-            sys.exit()
+            sys.exit(1)
 
         self.origins = collections.Counter(starting_places)
 
@@ -42,6 +42,7 @@ class locationOptimiser(origins_list, api_key):
         candidate_locs = self.get_candidates(midpoint)
 
         return candidate_locs
+
 
     def geocode_addresses(self, origins):
         """
@@ -68,7 +69,6 @@ class locationOptimiser(origins_list, api_key):
             loc = (loc['lat'], loc['lng'])
 
         return loc
-
 
 
     def find_midpoint(self, geocodes):
@@ -104,6 +104,7 @@ class locationOptimiser(origins_list, api_key):
 
         return candidates
 
+
     def nearest_cities(self, geocode):
         """
         Return list of tuple with nearest cities with airpoints to geocode
@@ -119,7 +120,6 @@ class locationOptimiser(origins_list, api_key):
         """
         address = self.gmaps.reverse_geocode(geocode)
         return address
-
 
 
 if __name__=='__main__':
