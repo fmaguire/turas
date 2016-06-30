@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+      <div class="row">
+          <form action="" method="post" name="start">
+              {{ form.hidden_tag() }}
+              <p> Please enter a name for your meeting: <br>
+              {{ form.meeting_name(size=30, placeholder="CIFAR IMB 2017") }} <br></p>
+
+              <p> Please enter list of starting locations: <br>
+              {{ form.locations(cols=30, rows=10, 
+                                placeholder="Edinburgh, Scotland\n"
+                                            "Edinburgh, Scotland\n"
+                                            "Oxford, England\n"
+                                            "Vancouver, Canada\n"
+                                            "Barcelona, Spain\n"
+                                            "Barcelona, Spain\n"
+                                            "Barcelona, Spain\n"
+                                            "etc.")}}<br></p>
+
+              <p> Or upload a file containing this list: <br>
+              {{ form.file_locations }}<br></p>
+
+              <p><input type="submit" value="Submit"></p>
+          </form>
+      </div>
+</div>
+{% endblock %}
+
