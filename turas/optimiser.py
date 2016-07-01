@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
+import numpy as np
 import sys
 import collections
 import googlemaps
 
-class locationOptimiser(origins_list, api_key):
+class locationOptimiser:
     """
     Class to optimise the location for minimal distance of a
     range of locations and a gmaps API key
     """
 
-    def __init__(self):
+    def __init__(self, name, origins_list, api_key):
         """
         Check input starting places and api
         """
@@ -24,11 +25,13 @@ class locationOptimiser(origins_list, api_key):
             print("List of origins must be provided")
             sys.exit(1)
 
-        if not all([type(x) == str for x in origins_list])
+        if not all([type(x) == str for x in origins_list]):
             print("Origins must be provided as strings in list")
             sys.exit(1)
 
-        self.origins = collections.Counter(starting_places)
+        self.name = name
+
+        self.origins = collections.Counter(origins_list)
 
 
     def get_best_location(self):
@@ -38,6 +41,8 @@ class locationOptimiser(origins_list, api_key):
         geocoded_origins = self.geocode_addresses(self.origins)
 
         midpoint = self.find_midpoint(geocoded_origins)
+
+        print(midpoint)
 
         candidate_locs = self.get_candidates(midpoint)
 
@@ -70,20 +75,28 @@ class locationOptimiser(origins_list, api_key):
 
         return loc
 
-
     def find_midpoint(self, geocodes):
         """
         Find geocode of midpoint of a list of geocodes
         """
 
+        # unroll geocode list
+        # i.e. change from counter to full redundancy
+        unrolled_codes = []
+        for loc in geocodes:
+            for num in range(loc[1]):
+                unrolled_codes.append(loc[0])
+
+        print(unrolled_codes)
+
         xyz = np.array([0., 0., 0.])
 
-        for lat, lon in geocodes:
+        for lat, lon in unrolled_codes:
             xyz[0] += np.cos(lat) * np.cos(lon)
             xyz[1] += np.cos(lat) * np.sin(lon)
             xyz[2] += np.sin(lat)
 
-        xyz = xyz / len(geocodes)
+        xyz = xyz / len(unrolled_codes)
 
         center = (np.arctan2(xyz[2],
                              np.sqrt(xyz[0] * xyz[0] + xyz[1] * xyz[1])),
@@ -126,5 +139,5 @@ if __name__=='__main__':
 
     api_key = sys.argv[2]
     starting_places = sys.argv[1]
-    optimise_location(starting_places, api_key)
+    locationOptimiser("test", starting_places, api_key)
 

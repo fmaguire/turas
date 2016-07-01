@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+g!/usr/bin/env python3
 
 from flask_wtf import Form
 import os

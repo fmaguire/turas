@@ -2,6 +2,8 @@
 
 from turas import app
 from .forms import LocationForm
+from .optimiser import locationOptimiser
+import os
 import flask
 
 @app.route('/')
@@ -29,6 +31,13 @@ def previous():
     pass
 
 def optimise(data):
+    """
+    Code to run optimisation and redirect to output
+    """
+    loc = locationOptimiser(data['meeting_name'], data['locations'].split("\r\n"), os.environ['GMAPS_API_KEY'])
+    print(loc.get_best_location())
+
+
     return flask.render_template('processing.html', data=data)
 
 
